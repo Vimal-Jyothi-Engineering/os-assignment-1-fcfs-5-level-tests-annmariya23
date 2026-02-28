@@ -18,7 +18,6 @@ int main() {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
     }
 
-    // Proper stable bubble sort by arrival time
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
             if (p[j].arrival > p[j + 1].arrival) {
@@ -29,20 +28,18 @@ int main() {
         }
     }
 
-    int current_time = 0;
+    int completion = 0;
     int total_wt = 0;
     int total_tat = 0;
 
     for (int i = 0; i < n; i++) {
 
-        if (current_time < p[i].arrival)
-            current_time = p[i].arrival;
+        if (completion < p[i].arrival)
+            completion = p[i].arrival;
 
-        p[i].waiting = current_time - p[i].arrival;
-
-        current_time += p[i].burst;
-
-        p[i].turnaround = current_time - p[i].arrival;
+        p[i].waiting = completion - p[i].arrival;
+        completion += p[i].burst;
+        p[i].turnaround = completion - p[i].arrival;
 
         total_wt += p[i].waiting;
         total_tat += p[i].turnaround;
