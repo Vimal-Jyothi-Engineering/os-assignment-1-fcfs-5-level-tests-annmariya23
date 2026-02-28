@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+
 typedef struct {
     char pid[10];
     int arrival;
@@ -34,12 +35,14 @@ int main() {
 
     for (int i = 0; i < n; i++) {
 
-        if (current_time < p[i].arrival)
+        if (current_time < p[i].arrival) {
             current_time = p[i].arrival;
+        }
 
         p[i].waiting = current_time - p[i].arrival;
+        p[i].turnaround = p[i].waiting + p[i].burst;
+
         current_time += p[i].burst;
-        p[i].turnaround = current_time - p[i].arrival;
 
         total_wt += p[i].waiting;
         total_tat += p[i].turnaround;
