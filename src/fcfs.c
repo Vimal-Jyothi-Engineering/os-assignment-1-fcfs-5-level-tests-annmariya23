@@ -8,6 +8,7 @@ typedef struct {
     int waiting;
     int turnaround;
     int completion;
+    int index;
 } Process;
 
 int main() {
@@ -18,11 +19,13 @@ int main() {
 
     for (int i = 0; i < n; i++) {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
+        p[i].index = i;
     }
 
     for (int i = 0; i < n - 1; i++) {
         for (int j = i + 1; j < n; j++) {
-            if (p[i].arrival > p[j].arrival) {
+            if (p[i].arrival > p[j].arrival ||
+               (p[i].arrival == p[j].arrival && p[i].index > p[j].index)) {
                 Process temp = p[i];
                 p[i] = p[j];
                 p[j] = temp;
@@ -33,35 +36,34 @@ int main() {
     int total_waiting = 0;
     int total_turnaround = 0;
 
-    p[0].completion = p[0].arrival + p[0].burst;
-    p[0].turnaround = p[0].completion - p[0].arrival;
-    p[0].waiting = p[0].turnaround - p[0].burst;
+    int current_time = 0;
 
-    total_waiting += p[0].waiting;
-    total_turnaround += p[0].turnaround;
+    for (int i = 0; i < n; i++) {
+        if (current_time < p[i].arrival)
+            current_time = p[i].arrival;
 
-    for (int i = 1; i < n; i++) {
-        if (p[i].arrival > p[i - 1].completion)
-            p[i].completion = p[i].arrival + p[i].burst;
-        else
-            p[i].completion = p[i - 1].completion + p[i].burst;
-
+        p[i].waiting = current_time - p[i].arrival;
+        p[i].completion = current_time + p[i].burst;
         p[i].turnaround = p[i].completion - p[i].arrival;
-        p[i].waiting = p[i].turnaround - p[i].burst;
+
+        current_time = p[i].completion;
 
         total_waiting += p[i].waiting;
         total_turnaround += p[i].turnaround;
     }
 
     printf("Waiting Time:\n");
-for (int i = 0; i < n; i++) {
-    printf("%s %d\n", p[i].pid, p[i].waiting);
-}
-printf("Turnaround Time:\n");
-for (int i = 0; i < n; i++) {
-    printf("%s %d\n", p[i].pid, p[i].turnaround);
-}
-printf("Average Waiting Time: %.2f\n", (float)total_waiting / n);
-printf("Average Turnaround Time: %.2f", (float)total_turnaround / n);
+    for (int i = 0; i < n; i++) {
+        printf("%s %d\n", p[i].pid, p[i].waiting);
+    }
+
+    printf("Turnaround Time:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%s %d\n", p[i].pid, p[i].turnaround);
+    }
+
+    printf("Average Waiting Time: %.2f\n", (float)total_waiting / n);
+    printf("Average Turnaround Time: %.2f", (float)total_turnaround / n);
+
     return 0;
 }
