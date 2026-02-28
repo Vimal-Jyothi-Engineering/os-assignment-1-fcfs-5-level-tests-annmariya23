@@ -54,17 +54,14 @@ int main() {
     }
 
     printf("Waiting Time:\n");
-    for (int i = 0; i < n; i++) {
-        printf("%s %d\n", p[i].pid, p[i].waiting);
-    }
-
-    printf("Turnaround Time:\n");
-    for (int i = 0; i < n; i++) {
-        printf("%s %d\n", p[i].pid, p[i].turnaround);
-    }
-
-    printf("Average Waiting Time: %.2f\n", (float)total_waiting / n);
-    printf("Average Turnaround Time: %.2f\n", (float)total_turnaround / n);
-
+for (int i = 0; i < n; i++) {
+    printf("%s %d\n", p[i].pid, p[i].waiting);
+}
+printf("Turnaround Time:\n");
+for (int i = 0; i < n; i++) {
+    printf("%s %d\n", p[i].pid, p[i].turnaround);
+}
+printf("Average Waiting Time: %.2f\n", (float)total_waiting / n);
+printf("Average Turnaround Time: %.2f", (float)total_turnaround / n);
     return 0;
 }
