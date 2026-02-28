@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 typedef struct {
     char pid[10];
@@ -19,27 +20,27 @@ int main() {
     }
 
     for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (p[j].arrival > p[j + 1].arrival) {
-                Process temp = p[j];
-                p[j] = p[j + 1];
-                p[j + 1] = temp;
+        for (int j = i + 1; j < n; j++) {
+            if (p[i].arrival > p[j].arrival) {
+                Process temp = p[i];
+                p[i] = p[j];
+                p[j] = temp;
             }
         }
     }
 
-    int completion = 0;
+    int current_time = 0;
     int total_wt = 0;
     int total_tat = 0;
 
     for (int i = 0; i < n; i++) {
 
-        if (completion < p[i].arrival)
-            completion = p[i].arrival;
+        if (current_time < p[i].arrival)
+            current_time = p[i].arrival;
 
-        p[i].waiting = completion - p[i].arrival;
-        completion += p[i].burst;
-        p[i].turnaround = completion - p[i].arrival;
+        p[i].waiting = current_time - p[i].arrival;
+        current_time += p[i].burst;
+        p[i].turnaround = current_time - p[i].arrival;
 
         total_wt += p[i].waiting;
         total_tat += p[i].turnaround;
