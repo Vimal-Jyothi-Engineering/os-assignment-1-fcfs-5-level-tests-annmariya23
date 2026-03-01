@@ -2,7 +2,7 @@
 #include <string.h>
 
 typedef struct {
-    char pid[10];
+    char pid[64];
     int arrival;
     int burst;
     int waiting;
@@ -11,7 +11,7 @@ typedef struct {
 
 int main() {
     int n;
-    scanf("%d", &n);
+    if (scanf("%d", &n) != 1) return 0;
 
     Process p[n];
 
@@ -19,24 +19,21 @@ int main() {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
     }
 
-    // Sort by arrival time (FCFS rule)
     for(int i = 0; i < n - 1; i++) {
-        for(int j = i + 1; j < n; j++) {
-            if(p[i].arrival > p[j].arrival) {
-                Process temp = p[i];
-                p[i] = p[j];
-                p[j] = temp;
+        for(int j = 0; j < n - i - 1; j++) {
+            if(p[j].arrival > p[j+1].arrival) {
+                Process temp = p[j];
+                p[j] = p[j+1];
+                p[j+1] = temp;
             }
         }
     }
 
     int current_time = 0;
-    float total_waiting = 0;
-    float total_turnaround = 0;
+    double total_waiting = 0;
+    double total_turnaround = 0;
 
     for(int i = 0; i < n; i++) {
-
-        // If CPU is idle
         if(current_time < p[i].arrival) {
             current_time = p[i].arrival;
         }
