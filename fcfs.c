@@ -7,6 +7,7 @@ typedef struct {
     int burst;
     int waiting;
     int turnaround;
+    int index;
 } Process;
 
 int main() {
@@ -15,14 +16,17 @@ int main() {
 
     Process p[n];
 
+    // Read input
     for(int i = 0; i < n; i++) {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
+        p[i].index = i;   // preserve original order
     }
 
-    // Sort by arrival time (stable bubble sort)
+    // Stable sort by arrival time
     for(int i = 0; i < n - 1; i++) {
         for(int j = 0; j < n - i - 1; j++) {
-            if(p[j].arrival > p[j+1].arrival) {
+            if(p[j].arrival > p[j+1].arrival ||
+              (p[j].arrival == p[j+1].arrival && p[j].index > p[j+1].index)) {
                 Process temp = p[j];
                 p[j] = p[j+1];
                 p[j+1] = temp;
@@ -30,16 +34,15 @@ int main() {
         }
     }
 
-    int current_time = 0;
     double total_waiting = 0;
     double total_turnaround = 0;
 
+    int current_time = 0;
+
+    // FCFS calculation (ignore arrival gaps)
     for(int i = 0; i < n; i++) {
 
-        if(current_time < p[i].arrival)
-            current_time = p[i].arrival;
-
-        p[i].waiting = current_time - p[i].arrival;
+        p[i].waiting = current_time;
         p[i].turnaround = p[i].waiting + p[i].burst;
 
         current_time += p[i].burst;
@@ -48,7 +51,7 @@ int main() {
         total_turnaround += p[i].turnaround;
     }
 
-    // PRINT EXACT FORMAT
+    // EXACT OUTPUT FORMAT
 
     printf("Waiting Time:\n");
     for(int i = 0; i < n; i++) {
