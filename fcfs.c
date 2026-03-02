@@ -55,17 +55,7 @@ int main() {
         total_turnaround += p[i].turnaround;
     }
 
-    // Step 3: Restore original input order before printing
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (p[j].index > p[j+1].index) {
-                Process temp = p[j];
-                p[j] = p[j+1];
-                p[j+1] = temp;
-            }
-        }
-    }
-
+    
     // Step 4: Exact required output format
     printf("Waiting Time:\n");
     for (int i = 0; i < n; i++)
