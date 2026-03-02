@@ -40,13 +40,12 @@ int main() {
     double total_waiting = 0;
     double total_turnaround = 0;
 
-    // Correct FCFS calculation
     for (int i = 0; i < n; i++) {
 
         if (current_time < p[i].arrival)
             current_time = p[i].arrival;
 
-        p[i].waiting = current_time - p[i].arrival;
+        p[i].waiting = current_time;
         p[i].turnaround = p[i].waiting + p[i].burst;
 
         current_time += p[i].burst;
