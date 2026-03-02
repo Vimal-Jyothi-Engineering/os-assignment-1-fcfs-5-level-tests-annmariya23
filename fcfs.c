@@ -18,6 +18,7 @@ int main() {
     Process *p = malloc(n * sizeof(Process));
     if (!p) return 0;
 
+    // Read input
     for (int i = 0; i < n; i++) {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
         p[i].index = i;
@@ -39,24 +40,22 @@ int main() {
     double total_waiting = 0;
     double total_turnaround = 0;
 
+    // Correct FCFS calculation
     for (int i = 0; i < n; i++) {
 
-        int start_time;
-
         if (current_time < p[i].arrival)
-            start_time = p[i].arrival;
-        else
-            start_time = current_time;
+            current_time = p[i].arrival;
 
-        p[i].waiting = start_time - p[i].arrival;
+        p[i].waiting = current_time - p[i].arrival;
         p[i].turnaround = p[i].waiting + p[i].burst;
 
-        current_time = start_time + p[i].burst;
+        current_time += p[i].burst;
 
         total_waiting += p[i].waiting;
         total_turnaround += p[i].turnaround;
     }
 
+    // Output in EXACT required format
     printf("Waiting Time:\n");
     for (int i = 0; i < n; i++)
         printf("%s %d\n", p[i].pid, p[i].waiting);
