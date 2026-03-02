@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef struct {
     char pid[64];
@@ -10,17 +11,19 @@ typedef struct {
 } Process;
 
 int main() {
+
     int n;
     if (scanf("%d", &n) != 1) return 0;
 
-    Process p[n];
+    Process *p = malloc(n * sizeof(Process));
+    if (!p) return 0;
 
     for (int i = 0; i < n; i++) {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
         p[i].index = i;
     }
 
-    // Stable sort by arrival
+    // Stable sort by arrival time
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
             if (p[j].arrival > p[j+1].arrival ||
@@ -38,14 +41,17 @@ int main() {
 
     for (int i = 0; i < n; i++) {
 
-        // Handle idle CPU
-        if (current_time < p[i].arrival)
-            current_time = p[i].arrival;
+        int start_time;
 
-        p[i].waiting = current_time - p[i].arrival;
+        if (current_time < p[i].arrival)
+            start_time = p[i].arrival;
+        else
+            start_time = current_time;
+
+        p[i].waiting = start_time - p[i].arrival;
         p[i].turnaround = p[i].waiting + p[i].burst;
 
-        current_time += p[i].burst;
+        current_time = start_time + p[i].burst;
 
         total_waiting += p[i].waiting;
         total_turnaround += p[i].turnaround;
@@ -62,5 +68,6 @@ int main() {
     printf("Average Waiting Time: %.2f\n", total_waiting / n);
     printf("Average Turnaround Time: %.2f", total_turnaround / n);
 
+    free(p);
     return 0;
 }
