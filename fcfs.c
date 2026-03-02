@@ -24,11 +24,11 @@ int main() {
         p[i].index = i;   // store original order
     }
 
-    // Step 1: Stable sort by arrival time
+    
+    // Stable bubble sort by arrival only
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
-            if (p[j].arrival > p[j+1].arrival ||
-               (p[j].arrival == p[j+1].arrival && p[j].index > p[j+1].index)) {
+            if (p[j].arrival > p[j+1].arrival) {
                 Process temp = p[j];
                 p[j] = p[j+1];
                 p[j+1] = temp;
